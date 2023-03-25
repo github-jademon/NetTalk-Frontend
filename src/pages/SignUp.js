@@ -24,24 +24,33 @@ const SignUp = () => {
   return (
     <div>
       <form name="form">
-        <input
-          type="text"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="text"
-          id="userid"
-          value={userid}
-          onChange={(e) => setUserid(e.target.value)}
-        />
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div>
+          <label name="email">이메일</label>
+          <input
+            type="text"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label name="userid">아이디</label>
+          <input
+            type="text"
+            id="userid"
+            value={userid}
+            onChange={(e) => setUserid(e.target.value)}
+          />
+        </div>
+        <div>
+          <label name="password">비밀번호</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
         <input type="button" value="회원가입" onClick={() => submit()} />
       </form>
       <li>

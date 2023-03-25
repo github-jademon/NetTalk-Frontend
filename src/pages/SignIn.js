@@ -14,7 +14,12 @@ const SignIn = () => {
     console.log(body);
     axios
       .post(`/auth/login`, body)
-      .then((response) => console.log(response.data))
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.accessToken) {
+          localStorage.setItem("token", response.accessToken);
+        }
+      })
       .catch((error) => console.log(error));
     console.log(email, password);
   }
@@ -22,18 +27,24 @@ const SignIn = () => {
   return (
     <div>
       <form name="form">
-        <input
-          type="text"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div>
+          <label name="email">이메일 : </label>
+          <input
+            type="text"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label name="password">비밀번호</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
         <input type="button" value="로그인" onClick={() => submit()} />
       </form>
       <li>
