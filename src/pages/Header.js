@@ -7,21 +7,35 @@ const Header = () => {
     fontSize: "2rem",
   };
 
+  const defaultStyle = {
+    color: "black",
+    fontSize: "1rem",
+  };
+
   return (
     <div>
       <ul>
         <li>
-          <NavLink exact to="/" activeStyle={activeStyle}>
+          <NavLink
+            to="/"
+            style={({ isActive }) => (isActive ? activeStyle : defaultStyle)}
+          >
             홈
           </NavLink>
         </li>
         <li>
-          <NavLink exact to="/signin" activeStyle={activeStyle}>
+          <NavLink
+            to="/signin"
+            style={({ isActive }) => (isActive ? activeStyle : defaultStyle)}
+          >
             로그인
           </NavLink>
         </li>
         <li>
-          <NavLink exact to="/signup" activeStyle={activeStyle}>
+          <NavLink
+            to="/signup"
+            style={({ isActive }) => (isActive ? activeStyle : defaultStyle)}
+          >
             회원가입
           </NavLink>
         </li>
