@@ -3,8 +3,8 @@ import { NavLink } from "react-router-dom";
 
 const Header = () => {
   const activeStyle = {
-    color: "green",
-    fontSize: "2rem",
+    color: "blue",
+    fontSize: "1rem",
   };
 
   const defaultStyle = {
@@ -13,7 +13,7 @@ const Header = () => {
   };
 
   return (
-    <div>
+    <div className="header">
       <ul>
         <li>
           <NavLink

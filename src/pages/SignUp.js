@@ -6,6 +6,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [userid, setUserid] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordck, setPasswordck] = useState("");
 
   function submit() {
     const body = {
@@ -22,7 +23,7 @@ const SignUp = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <form name="form">
         <div>
           <label name="email">이메일</label>
@@ -49,6 +50,15 @@ const SignUp = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div>
+          <label name="passwordck">비밀번호확인</label>
+          <input
+            type="password"
+            id="passwordck"
+            value={passwordck}
+            onChange={(e) => setPasswordck(e.target.value)}
           />
         </div>
         <input type="button" value="회원가입" onClick={() => submit()} />

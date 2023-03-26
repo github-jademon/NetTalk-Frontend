@@ -25,7 +25,7 @@ const SignIn = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <form name="form">
         <div>
           <label name="email">이메일 : </label>
