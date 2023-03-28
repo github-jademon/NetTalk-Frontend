@@ -36,12 +36,6 @@ li {
   width: 80%;
 }
 
-.valid-ck {
-  font-size: 9px;
-  color: red;
-  margin: 0 10px;
-}
-
 label {
   display: inline-block;
   width: 100px;
@@ -63,4 +57,27 @@ input[type="button"] {
   margin: 5px;
   border: none;
   background-color: #ddd;
+}
+
+.valid-ck {
+  font-size: 9px;
+  color: red;
+  margin: 0 10px;
+}
+
+.room {
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  border: none;
+  border-bottom: 1px #9ca3af solid;
+}
+
+.room div {
+  padding: 10px;
+  color: #9ca3af;
+}
+
+a {
+  text-decoration: none;
 }
