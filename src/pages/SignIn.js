@@ -11,7 +11,6 @@ const SignIn = () => {
       email: email,
       password: password,
     };
-    console.log(body);
     const res = await axios
       .post(`/auth/login`, body)
       .catch((error) => console.log(error));

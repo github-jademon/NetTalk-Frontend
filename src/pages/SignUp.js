@@ -8,19 +8,21 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [passwordck, setPasswordck] = useState("");
 
-  function submit() {
+  const submit = async () => {
     const body = {
       email: email,
       userid: userid,
       password: password,
+      passwordck: passwordck,
     };
     console.log(body);
-    axios
+    const res = await axios
       .post(`/auth/signup`, body)
-      .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
-    console.log(body);
-  }
+
+    alert(res.data.responseMessage);
+    console.log(res);
+  };
 
   return (
     <div className="container">
@@ -64,7 +66,7 @@ const SignUp = () => {
         <input type="button" value="회원가입" onClick={() => submit()} />
       </form>
       <li>
-        <NavLink to="/signup">이미 회원이신가요? 로그인</NavLink>
+        <NavLink to="/signin">이미 회원이신가요? 로그인</NavLink>
       </li>
       <li>
         <NavLink to="/password">비밀번호를 잊으셨나요? 비밀번호변경</NavLink>
