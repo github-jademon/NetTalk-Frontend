@@ -7,6 +7,9 @@ const SignUp = () => {
   const [userid, setUserid] = useState("");
   const [password, setPassword] = useState("");
   const [passwordck, setPasswordck] = useState("");
+  const [valid_email, setValidEmail] = useState("");
+  const [valid_userid, setValidUserid] = useState("");
+  const [valid_password, setValidPassword] = useState("");
 
   const submit = async () => {
     const body = {
@@ -20,7 +23,14 @@ const SignUp = () => {
       .post(`/auth/signup`, body)
       .catch((error) => console.log(error));
 
-    alert(res.data.responseMessage);
+    if (res.data.responseMessage) {
+      alert(res.data.responseMessage);
+    } else {
+      setValidEmail(res.data.valid_email);
+      setValidPassword(res.data.valid_password);
+      setValidUserid(res.data.valid_userid);
+    }
+
     console.log(res);
   };
 
@@ -35,6 +45,7 @@ const SignUp = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          {valid_email ? <span className="valid-ck">{valid_email}</span> : null}
         </div>
         <div>
           <label name="userid">아이디</label>
@@ -44,6 +55,9 @@ const SignUp = () => {
             value={userid}
             onChange={(e) => setUserid(e.target.value)}
           />
+          {valid_userid ? (
+            <span className="valid-ck">{valid_userid}</span>
+          ) : null}
         </div>
         <div>
           <label name="password">비밀번호</label>
@@ -53,6 +67,9 @@ const SignUp = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {valid_password ? (
+            <span className="valid-ck">{valid_password}</span>
+          ) : null}
         </div>
         <div>
           <label name="passwordck">비밀번호확인</label>

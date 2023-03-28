@@ -36,6 +36,12 @@ li {
   width: 80%;
 }
 
+.valid-ck {
+  font-size: 9px;
+  color: red;
+  margin: 0 10px;
+}
+
 label {
   display: inline-block;
   width: 100px;
