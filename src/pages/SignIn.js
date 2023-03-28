@@ -6,29 +6,28 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function submit() {
+  const submit = async () => {
     const body = {
       email: email,
       password: password,
     };
     console.log(body);
-    axios
+    const res = await axios
       .post(`/auth/login`, body)
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.accessToken) {
-          localStorage.setItem("token", response.accessToken);
-        }
-      })
       .catch((error) => console.log(error));
-    console.log(email, password);
-  }
+
+    alert(res.data.responseMessage);
+    console.log(res);
+    if (res.accessToken) {
+      localStorage.setItem("token", res.accessToken);
+    }
+  };
 
   return (
     <div className="container">
       <form name="form">
         <div>
-          <label name="email">이메일 : </label>
+          <label name="email">이메일</label>
           <input
             type="text"
             id="email"
