@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Loader } from "pages";
 
 const Main = (props) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
 
   useEffect(() => {
     loadData();
@@ -16,11 +17,11 @@ const Main = (props) => {
     setData(response.data);
   };
 
-  return (
+  return data ? (
     <div className="container">
-      <h3>안녕하세요. 메인페이지 입니다.</h3>
+      <h3 className="title">안녕하세요. 메인페이지 입니다.</h3>
       {data.map((v, i) => (
-        <Link to={"/room/" + v.id} key={i} className="room">
+        <Link to={"/room/" + v.id} key={i} className="rooms">
           <div>{i + 1}</div>
           <div>{v.title}</div>
           <div>{v.userCount}</div>
@@ -29,6 +30,8 @@ const Main = (props) => {
         </Link>
       ))}
     </div>
+  ) : (
+    <Loader />
   );
 };
 
