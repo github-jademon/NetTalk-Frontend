@@ -194,6 +194,7 @@ a {
   border: #ddd 1px solid;
   border-radius: 5px;
   word-break: break-all;
+  text-align: end;
 }
 
 .container .input {
@@ -220,4 +221,23 @@ a {
 .room .title {
   font-size: 30px;
   margin: 10px 0;
+}
+
+.system {
+  width: auto;
+  padding: 10px 0;
+  margin: auto;
+}
+
+.system .info {
+  height: 0;
+}
+
+.system .text {
+  width: auto;
+  padding: 5px 10px;
+  border: #ddd 1px solid;
+  border-radius: 5px;
+  word-break: break-all;
+  text-align: center;
 }

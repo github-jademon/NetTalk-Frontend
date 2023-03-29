@@ -1,7 +1,10 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ user, setUser }) => {
+  const token = localStorage.getItem("token");
+
   const activeStyle = {
     color: "blue",
     fontSize: "1rem",
@@ -10,6 +13,41 @@ const Header = () => {
   const defaultStyle = {
     color: "black",
     fontSize: "1rem",
+  };
+
+  useEffect(() => {
+    // loadData();
+    loadUser();
+  }, []);
+
+  // const loadData = async () => {
+  //   if (token) {
+  //     const response = await axios
+  //       .get("/api/me", {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       })
+  //       .catch((err) => console.log(err));
+  //     console.log(response.data);
+  //     setUser(response.data);
+  //   }
+  // };
+  const loadUser = async () => {
+    const response = await axios
+      .get("/api/user/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .catch((err) => console.log(err));
+    if (response.data.statusCode !== 200) {
+      alert(response.data.responseMessage);
+    } else {
+      console.log(response.data.data);
+      console.log("userload");
+      setUser(response.data.data);
+    }
   };
 
   return (

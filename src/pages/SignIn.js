@@ -17,8 +17,8 @@ const SignIn = () => {
 
     alert(res.data.responseMessage);
     console.log(res);
-    if (res.accessToken) {
-      localStorage.setItem("token", res.accessToken);
+    if (res.data.data.token.accessToken) {
+      localStorage.setItem("token", res.data.data.token.accessToken);
     }
   };
 
