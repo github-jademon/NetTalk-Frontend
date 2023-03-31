@@ -1,116 +1,111 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 
-const Socket = ({ username, useremail }) => {
+const Chat = () => {
   const [message, setMessage] = useState("");
-  const socket = new WebSocket("ws://localhost:8080/ws/chat");
+  const [name, setName] = useState("");
   const [messages, setMessages] = useState([]);
+  const [chkLog, setChkLog] = useState(false); // 첫실행시
+  const [socketData, setSocketData] = useState();
+
+  const ws = useRef(null);
+
+  const msgBox = messages.map((v, i) => (
+    <div key={i} className={v.name === name ? "user" : "partner"}>
+      <div className="info">{v.name}</div>
+      <div className="text">{v.msg}</div>
+      <div>{i.data}</div>
+    </div>
+  ));
 
   useEffect(() => {
-    openSocket();
-  }, []);
+    if (socketData !== undefined) {
+      const tempData = messages.concat(socketData);
+      console.log(tempData);
+      setMessages(tempData);
+    }
+  }, [socketData]);
 
-  const openSocket = () => {
-    console.log("open");
-    socket.onmessage = onMessage;
-    socket.onopen = onOpen;
-    socket.onclose = onClose;
+  const webSocketLogin = useCallback(() => {
+    ws.current = new WebSocket("ws://localhost:8080/ws/chat");
+
+    ws.current.onmessage = (message) => {
+      const dataSet = JSON.parse(message.data);
+      setSocketData(dataSet);
+    };
+  });
+
+  const onText = (e) => {
+    setMessage(e.target.value);
+    console.log(message);
   };
 
-  const sendMessage = () => {
-    var str = username + " : " + message;
+  const send = useCallback(() => {
+    if (!chkLog) {
+      if (name === "") {
+        alert("이름을 입력하세요.");
+        document.getElementById("name").focus();
+        return;
+      }
+      webSocketLogin();
+      setChkLog(true);
+    }
 
-    console.log(str);
-    socket.send(
-      JSON.stringify({
-        type: "user",
-        useremail,
-        username,
-        message,
-      })
-    );
+    if (message !== "") {
+      const data = {
+        name,
+        msg: message,
+        date: new Date().toLocaleString(),
+      }; //전송 데이터(JSON)
+
+      const temp = JSON.stringify(data);
+
+      if (ws.current.readyState === 0) {
+        //readyState는 웹 소켓 연결 상태를 나타냄
+        ws.current.onopen = () => {
+          //webSocket이 맺어지고 난 후, 실행
+          console.log(ws.current.readyState);
+          ws.current.send(temp);
+        };
+      } else {
+        ws.current.send(temp);
+      }
+    } else {
+      alert("메세지를 입력하세요.");
+      document.getElementById("msg").focus();
+      return;
+    }
     setMessage("");
-  };
+  });
 
-  const onClose = (e) => {
-    socket.send(
-      JSON.stringify({
-        type: "system",
-        useremail: "system",
-        username: "system",
-        message: username + "님이 퇴장하셨습니다.",
-      })
-    );
-  };
-
-  const onOpen = (e) => {
-    console.log("????????");
-    socket.send(
-      JSON.stringify({
-        type: "system",
-        useremail: "system",
-        username: "system",
-        message: username + "님이 입장하셨습니다.",
-      })
-    );
-    console.log("????????");
-  };
-
-  const onMessage = (msg) => {
-    var {
-      type,
-      useremail: senderUseremail,
-      username: senderUsername,
-      message,
-    } = JSON.parse(msg.data);
-
-    setMessages((messages) => {
-      return [
-        ...messages,
-        {
-          me: senderUseremail === useremail,
-          type,
-          useremail: senderUseremail,
-          message,
-          username: senderUsername,
-        },
-      ];
-    });
-
-    console.log(messages);
-  };
   return (
     <>
-      <div className="talk" id="talk">
-        {messages.map((v, i) => {
-          return (
-            <div
-              key={i}
-              className={
-                v.me ? "user" : v.type === "system" ? "system" : "partner"
-              }
-            >
-              {v.type === "system" ? (
-                ""
-              ) : (
-                <div className="info">{v.username}</div>
-              )}
-              {/* <div className="info">{v.email}</div> */}
-              <div className="text">{v.message}</div>
-            </div>
-          );
-        })}
+      <input
+        disabled={chkLog}
+        placeholder="이름을 입력하세요."
+        type="text"
+        id="name"
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+      />
+      <div id="talk" className="talk">
+        {msgBox}
       </div>
-      <div className="input">
-        <input
-          type="text"
+      <div id="sendZone" className="input">
+        <textarea
+          id="msg"
           className="input-text"
-          onChange={(e) => setMessage(e.target.value)}
           value={message}
-        />
-        <input type="button" value="보내기" onClick={() => sendMessage()} />
+          onChange={onText}
+          onKeyDown={(ev) => {
+            if (ev.keyCode === 13) {
+              send();
+            }
+          }}
+        ></textarea>
+        <input type="button" value="보내기" id="btnSend" onClick={send} />
       </div>
     </>
   );
 };
 
-export default Socket;
+export default Chat;
