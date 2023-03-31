@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import { Loader, Socket } from "pages";
 import axios from "axios";
@@ -30,7 +30,7 @@ const Room = ({ user, setUser }) => {
       <div>{data.comment}</div>
       <hr />
       {/* <Socket useremail={user.email} username={user.userid} id={id} /> */}
-      <Socket />
+      <Socket roomId={id} />
     </div>
   ) : (
     <Loader />

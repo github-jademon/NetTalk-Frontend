@@ -23,10 +23,6 @@ body {
   z-index: 0;
 }
 
-.room {
-  overflow: auto;
-}
-
 .header {
   width: 100%;
   height: 70px;
@@ -156,7 +152,8 @@ a {
 .talk {
   display: flex;
   flex-direction: column;
-  overflow-x: scrool;
+  /* overflow-x: scrool; */
+  overflow: auto;
 }
 
 .partner {

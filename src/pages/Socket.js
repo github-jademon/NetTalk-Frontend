@@ -1,29 +1,35 @@
 import React, { useCallback, useRef, useState, useEffect } from "react";
 
-const Chat = () => {
+const Chat = ({ roomId }) => {
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
   const [messages, setMessages] = useState([]);
   const [chkLog, setChkLog] = useState(false); // 첫실행시
   const [socketData, setSocketData] = useState();
+  const scrollRef = useRef();
 
   const ws = useRef(null);
 
   const msgBox = messages.map((v, i) => (
     <div key={i} className={v.name === name ? "user" : "partner"}>
       <div className="info">{v.name}</div>
-      <div className="text">{v.msg}</div>
+      <div className="text">{v.message}</div>
       <div>{i.data}</div>
     </div>
   ));
 
   useEffect(() => {
     if (socketData !== undefined) {
-      const tempData = messages.concat(socketData);
-      console.log(tempData);
-      setMessages(tempData);
+      loadData();
     }
   }, [socketData]);
+
+  const loadData = async () => {
+    const tempData = messages.concat(socketData);
+    console.log(tempData);
+    await setMessages(tempData);
+    space();
+  };
 
   const webSocketLogin = useCallback(() => {
     ws.current = new WebSocket("ws://localhost:8080/ws/chat");
@@ -52,8 +58,9 @@ const Chat = () => {
 
     if (message !== "") {
       const data = {
+        roomId: roomId,
         name,
-        msg: message,
+        message,
         date: new Date().toLocaleString(),
       }; //전송 데이터(JSON)
 
@@ -77,6 +84,12 @@ const Chat = () => {
     setMessage("");
   });
 
+  const space = () => {
+    console.log(scrollRef.current.scrollTop);
+    console.log(scrollRef.current.scrollHeight);
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  };
+
   return (
     <>
       <input
@@ -87,11 +100,12 @@ const Chat = () => {
         value={name}
         onChange={(event) => setName(event.target.value)}
       />
-      <div id="talk" className="talk">
+      <div id="talk" className="talk room" ref={scrollRef}>
         {msgBox}
       </div>
       <div id="sendZone" className="input">
-        <textarea
+        <input
+          type="text"
           id="msg"
           className="input-text"
           value={message}
@@ -101,7 +115,7 @@ const Chat = () => {
               send();
             }
           }}
-        ></textarea>
+        ></input>
         <input type="button" value="보내기" id="btnSend" onClick={send} />
       </div>
     </>
