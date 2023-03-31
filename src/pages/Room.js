@@ -8,14 +8,9 @@ const Room = ({ user, setUser }) => {
   const params = useParams();
   const id = params.id;
 
-  const token = localStorage.getItem("token");
-  // const [username, setUsername] = useState("test");
-  // const [useremail, setUseremail] = useState("test");
-
   useEffect(() => {
     if (!data) {
       loadData();
-      // loadUser();
     }
   }, []);
 
@@ -27,25 +22,6 @@ const Room = ({ user, setUser }) => {
     setData(response.data);
   };
 
-  // const loadUser = async () => {
-  //   const response = await axios
-  //     .get("/api/user/me", {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     })
-  //     .catch((err) => console.log(err));
-  //   if (response.data.statusCode !== 200) {
-  //     alert(response.data.responseMessage);
-  //   } else {
-  //     console.log(response.data);
-  //     console.log("userload");
-  //     setUsername(response.data.data.userid);
-  //     setUseremail(response.data.data.email);
-  //     console.log(username, data);
-  //   }
-  // };
-
   return data && user ? (
     <div className="container room">
       <div className="title">
@@ -53,7 +29,8 @@ const Room = ({ user, setUser }) => {
       </div>
       <div>{data.comment}</div>
       <hr />
-      <Socket useremail={user.email} username={user.userid} />
+      {/* <Socket useremail={user.email} username={user.userid} id={id} /> */}
+      <Socket />
     </div>
   ) : (
     <Loader />

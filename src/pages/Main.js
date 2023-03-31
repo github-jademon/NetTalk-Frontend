@@ -19,7 +19,7 @@ const Main = (props) => {
 
   return data ? (
     <div className="container">
-      <h3 className="title">안녕하세요. 메인페이지 입니다.</h3>
+      <h3 className="title">채팅방 목록</h3>
       {data.map((v, i) => (
         <Link to={"/room/" + v.id} key={i} className="rooms">
           <div>{i + 1}</div>
