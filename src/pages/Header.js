@@ -34,19 +34,30 @@ const Header = ({ user, setUser }) => {
   //   }
   // };
   const loadUser = async () => {
-    const response = await axios
-      .get("/api/user/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .catch((err) => console.log(err));
-    if (response.data.statusCode !== 200) {
-      alert(response.data.responseMessage);
+    if (localStorage.getItem("token")) {
+      const response = await axios
+        .get("/api/user/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .catch((err) => console.log(err));
+      if (response.data.statusCode !== 200) {
+        if (response.data.responseMessage === "만료된 jWT 토큰입니다.") {
+          localStorage.removeItem("token");
+        } else {
+          alert(response.data.responseMessage);
+        }
+      } else {
+        console.log(response.data.data);
+        console.log("userload1");
+        setUser(response.data.data);
+      }
     } else {
-      console.log(response.data.data);
-      console.log("userload");
-      setUser(response.data.data);
+      setUser({
+        username: "test",
+        useremail: "test",
+      });
     }
   };
 
