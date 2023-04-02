@@ -23,7 +23,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="container">
+    <div className="auth-container">
       <form name="form">
         <div>
           <label name="email">이메일</label>
