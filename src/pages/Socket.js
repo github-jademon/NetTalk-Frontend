@@ -5,8 +5,9 @@ import * as SockJS from "sockjs-client";
 const Chat = ({ roomId, uuid, name }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [check, setCheck] = useState(true);
   const scrollRef = useRef();
-  const client = useRef(null);
+  const client = useRef({});
 
   const msgBox = messages.map((v, i) => (
     <div
@@ -17,7 +18,7 @@ const Chat = ({ roomId, uuid, name }) => {
     >
       {v.type === "user" ? <div className="info">{v.name}</div> : null}
       <div className="text">{v.message}</div>
-      {v.type === "system" ? null : <div>{i.date}</div>}
+      {v.type === "system" ? null : <div className="date">{v.date}</div>}
     </div>
   ));
 
@@ -27,18 +28,24 @@ const Chat = ({ roomId, uuid, name }) => {
     return () => disconnect();
   }, []);
 
+  useEffect(() => {
+    space();
+  }, [messages]);
+
   const connect = () => {
     client.current = new StompJs.Client({
-      // brokerURL: "ws://localhost:8080/ws-stomp/websocket", // 웹소켓 서버로 직접 접속
       webSocketFactory: () => new SockJS("/stomp/chat"),
       debug: function (str) {
         console.log(str);
       },
       onConnect: () => {
+        if (check) {
+          onOpen();
+          setCheck(false);
+        }
         client.current.subscribe(`/sub/chat/room/${roomId}`, ({ body }) => {
           console.log(body);
           setMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
-          space();
         });
       },
       onStompError: (frame) => {
@@ -47,18 +54,21 @@ const Chat = ({ roomId, uuid, name }) => {
     });
 
     client.current.activate();
-
-    // onOpen();
   };
 
   const onOpen = () => {
-    const data = JSON.stringify({
-      roomId: roomId,
-      type: "system",
-      name: "system",
-      // message: name + "님이 입장하셨습니다",
+    if (!client.current.connected) {
+      return;
+    }
+
+    client.current.publish({
+      destination: "/pub/chat/enter",
+      body: JSON.stringify({
+        roomId: roomId,
+        type: "system",
+        name: name,
+      }),
     });
-    client.current.publish("/pub/chat/enter", {}, data);
   };
 
   const disconnect = () => {
@@ -75,18 +85,16 @@ const Chat = ({ roomId, uuid, name }) => {
       document.getElementById("message").focus();
       return;
     } else {
-      const data = JSON.stringify({
-        roomId: roomId,
-        type: "user",
-        name,
-        uuid, // 사용자 로그인시 uuid 고정 음 이메일로 할까..?
-        message,
-        date: new Date().toLocaleString(),
-      });
-
       client.current.publish({
         destination: "/pub/chat/message",
-        body: data,
+        body: JSON.stringify({
+          roomId: roomId,
+          type: "user",
+          name,
+          uuid, // 사용자 로그인시 uuid 고정 음 이메일로 할까..?
+          message,
+          date: new Date().toLocaleString(),
+        }),
       });
 
       setMessage("");
@@ -98,6 +106,7 @@ const Chat = ({ roomId, uuid, name }) => {
   };
 
   const space = () => {
+    console.log(scrollRef.current.scrollHeight + "px");
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   };
 
