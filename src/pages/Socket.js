@@ -1,11 +1,13 @@
-import React, { useCallback, useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import * as StompJs from "@stomp/stompjs";
 import * as SockJS from "sockjs-client";
 
-const Chat = ({ roomId, uuid, name }) => {
+const Chat = ({ roomId }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [check, setCheck] = useState(true);
+  const [check, setCheck] = useState(false);
+  const [name, setName] = useState();
+  const uuid = localStorage.getItem("uuid");
   const scrollRef = useRef();
   const client = useRef({});
 
@@ -29,7 +31,11 @@ const Chat = ({ roomId, uuid, name }) => {
   }, []);
 
   useEffect(() => {
-    space();
+    try {
+      space();
+    } catch (e) {
+      console.log(e);
+    }
   }, [messages]);
 
   const connect = () => {
@@ -39,10 +45,6 @@ const Chat = ({ roomId, uuid, name }) => {
         console.log(str);
       },
       onConnect: () => {
-        if (check) {
-          onOpen();
-          setCheck(false);
-        }
         client.current.subscribe(`/sub/chat/room/${roomId}`, ({ body }) => {
           console.log(body);
           setMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
@@ -69,6 +71,7 @@ const Chat = ({ roomId, uuid, name }) => {
         name: name,
       }),
     });
+    setCheck(true);
   };
 
   const disconnect = () => {
@@ -101,16 +104,33 @@ const Chat = ({ roomId, uuid, name }) => {
     }
   };
 
-  const onText = (e) => {
-    setMessage(e.target.value);
-  };
-
   const space = () => {
     console.log(scrollRef.current.scrollHeight + "px");
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   };
 
-  return (
+  return !check ? (
+    <div className="input-modal">
+      <div className="input-name-container">
+        <div className="title">이름!</div>
+        <div className="input-name">
+          <input
+            type="text"
+            id="message"
+            className="input-text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onKeyDown={(ev) => {
+              if (ev.keyCode === 13) {
+                onOpen();
+              }
+            }}
+          ></input>
+          <input type="button" value="확인" onClick={onOpen} />
+        </div>
+      </div>
+    </div>
+  ) : (
     <>
       <div className="talk room" ref={scrollRef}>
         {msgBox}
@@ -121,7 +141,7 @@ const Chat = ({ roomId, uuid, name }) => {
           id="message"
           className="input-text"
           value={message}
-          onChange={onText}
+          onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(ev) => {
             if (ev.keyCode === 13) {
               send();

@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 
 const Header = ({ user, setUser }) => {
   const token = localStorage.getItem("token");
+  const [check, setCheck] = useState(true);
 
   const activeStyle = {
     color: "blue",
@@ -16,9 +17,20 @@ const Header = ({ user, setUser }) => {
   };
 
   useEffect(() => {
-    // loadData();
-    loadUser();
+    if (check) {
+      loadUser();
+      setCheck(false);
+    }
   }, []);
+
+  function uuidv4() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+      (
+        c ^
+        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+      ).toString(16)
+    );
+  }
 
   const loadUser = async () => {
     if (localStorage.getItem("token")) {
@@ -35,16 +47,14 @@ const Header = ({ user, setUser }) => {
         } else {
           alert(response.data.responseMessage);
         }
+        localStorage.setItem("uuid", uuidv4());
       } else {
         console.log(response.data.data);
-        console.log("userload1");
         setUser(response.data.data);
+        localStorage.setItem("uuid", user.email);
       }
     } else {
-      setUser({
-        username: "test",
-        useremail: "test",
-      });
+      localStorage.setItem("uuid", uuidv4());
     }
   };
 
@@ -75,8 +85,6 @@ const Header = ({ user, setUser }) => {
             회원가입
           </NavLink>
         </li>
-        {/* <li><NavLink exact to="/about" activeStyle={activeStyle}>소개</NavLink></li> */}
-        {/* <li><NavLink to="/about/react" activeStyle={activeStyle}>React 소개</NavLink></li> */}
       </ul>
     </div>
   );

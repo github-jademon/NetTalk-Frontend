@@ -1,15 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router";
 import { Loader, Socket } from "pages";
 import axios from "axios";
 
-const Room = ({ user, setUser }) => {
+const Room = () => {
   const [data, setData] = useState();
   const params = useParams();
   const id = params.id;
-  const location = useLocation();
-  const name = location.state.name;
-  const uuid = location.state.uuid;
 
   useEffect(() => {
     if (!data) {
@@ -25,14 +22,14 @@ const Room = ({ user, setUser }) => {
     setData(response.data);
   };
 
-  return data && user ? (
+  return data ? (
     <div className="container room">
       <div className="title">
         {data.id}. {data.title}
       </div>
       <div>{data.comment}</div>
       <hr />
-      <Socket roomId={id} name={name} uuid={uuid} />
+      <Socket roomId={id} />
     </div>
   ) : (
     <Loader />

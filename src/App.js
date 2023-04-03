@@ -8,6 +8,7 @@ const App = () => {
     username: "",
     useremail: "",
   });
+
   return (
     <>
       <BrowserRouter>
@@ -15,13 +16,9 @@ const App = () => {
         <div className="main">
           <Routes>
             <Route path="/" element={<Main />}></Route>
-            {/* <Route path="/product/*" element={<Product />}></Route> */}
             <Route path="/signin" element={<SignIn />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
-            <Route
-              path="/room/:id"
-              element={<Room user={user} setUser={setUser} />}
-            ></Route>
+            <Route path="/room/:id" element={<Room />}></Route>
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
         </div>
