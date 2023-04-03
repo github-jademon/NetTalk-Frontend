@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { Loader, Socket } from "pages";
 import axios from "axios";
 
@@ -7,6 +7,9 @@ const Room = ({ user, setUser }) => {
   const [data, setData] = useState();
   const params = useParams();
   const id = params.id;
+  const location = useLocation();
+  const name = location.state.name;
+  const uuid = location.state.uuid;
 
   useEffect(() => {
     if (!data) {
@@ -30,7 +33,7 @@ const Room = ({ user, setUser }) => {
       <div>{data.comment}</div>
       <hr />
       {/* <Socket useremail={user.email} username={user.userid} id={id} /> */}
-      <Socket roomId={id} />
+      <Socket roomId={id} name={name} uuid={uuid} />
     </div>
   ) : (
     <Loader />
