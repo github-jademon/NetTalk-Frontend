@@ -263,10 +263,27 @@ a {
 .auth-container {
   width: auto;
   display: flex;
-  max-height: 500px;
+  max-height: 700px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.auth-container #form {
+  padding: 30px 20px;
+  border: #ddd 1px solid;
+}
+
+.auth-container #form .title {
+  text-align: center;
+  margin: 0 0 10px 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.auth-container #form input[type="button"] {
+  width: calc(100% - 10px);
+  margin: 20px 5px;
 }
 
 .input-name {
