@@ -32,7 +32,6 @@ const Room = ({ user, setUser }) => {
       </div>
       <div>{data.comment}</div>
       <hr />
-      {/* <Socket useremail={user.email} username={user.userid} id={id} /> */}
       <Socket roomId={id} name={name} uuid={uuid} />
     </div>
   ) : (

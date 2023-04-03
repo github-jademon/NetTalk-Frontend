@@ -20,19 +20,6 @@ const Header = ({ user, setUser }) => {
     loadUser();
   }, []);
 
-  // const loadData = async () => {
-  //   if (token) {
-  //     const response = await axios
-  //       .get("/api/me", {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       })
-  //       .catch((err) => console.log(err));
-  //     console.log(response.data);
-  //     setUser(response.data);
-  //   }
-  // };
   const loadUser = async () => {
     if (localStorage.getItem("token")) {
       const response = await axios
