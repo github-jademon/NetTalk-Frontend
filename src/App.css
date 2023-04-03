@@ -106,6 +106,27 @@ input[type="button"] {
   color: #9ca3af;
 }
 
+.rooms .number {
+  width: 5%;
+  text-align: center;
+}
+
+.rooms .title {
+  width: 30%;
+  margin: 0;
+  text-align: start;
+}
+
+.rooms .comment {
+  width: 55%;
+  text-align: start;
+}
+
+.rooms .count {
+  width: 10%;
+  text-align: center;
+}
+
 a {
   text-decoration: none;
 }
@@ -246,4 +267,18 @@ a {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.input-name {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+}
+
+.input-name .input-text {
+  width: calc(100% - 80px);
+}
+
+.input-name input[type="button"] {
+  width: 80px;
 }

@@ -22,11 +22,12 @@ const Main = (props) => {
       <h3 className="title">채팅방 목록</h3>
       {data.map((v, i) => (
         <Link to={"/room/" + v.id} key={i} className="rooms">
-          <div>{i + 1}</div>
-          <div>{v.title}</div>
-          <div>{v.userCount}</div>
-          <div>{v.maxCount}</div>
-          <div>{v.comment}</div>
+          <div className="number">{i + 1}</div>
+          <div className="title">{v.title}</div>
+          <div className="comment">{v.comment}</div>
+          <div className="count">
+            {v.userCount} / {v.maxCount}
+          </div>
         </Link>
       ))}
     </div>
