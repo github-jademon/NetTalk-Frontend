@@ -44,7 +44,6 @@ const Chat = ({ roomId }) => {
 
   const loadData = async () => {
     const tempData = messages.concat(socketData);
-    // console.log(tempData);
     await setMessages(tempData);
     space();
   };
@@ -52,17 +51,12 @@ const Chat = ({ roomId }) => {
   const webSocketLogin = useCallback(() => {
     ws.current = new WebSocket("ws://localhost:8080/ws/chat");
 
-    ws.current.onmessage = (message) => {
-      const dataSet = JSON.parse(message.data);
-      setSocketData(dataSet);
-    };
+    ws.current.onmessage = onMessage;
+    ws.current.onopen = onOpen;
+    ws.current.onClose = onClose;
   });
 
-  const onText = (e) => {
-    setMessage(e.target.value);
-  };
-
-  const send = useCallback(() => {
+  const sendName = () => {
     if (!chkLog) {
       if (name === "") {
         alert("이름을 입력하세요.");
@@ -72,43 +66,59 @@ const Chat = ({ roomId }) => {
       webSocketLogin();
       setChkLog(true);
     }
+  };
 
-    if (message !== "") {
-      const data = {
-        roomId: roomId,
-        name,
-        uuid,
-        type: "user",
-        message,
-        date: new Date().toLocaleString(),
-      }; //전송 데이터(JSON)
+  const send = useCallback(() => {
+    sendName();
 
-      const temp = JSON.stringify(data);
-
-      if (ws.current.readyState === 0) {
-        //readyState는 웹 소켓 연결 상태를 나타냄
-        ws.current.onopen = () => {
-          const data = {
-            roomId: roomId,
-            type: "system",
-            name: "system",
-            message: name + "님이 입장하셨습니다",
-          };
-          const temp = JSON.stringify(data);
-          //webSocket이 맺어지고 난 후, 실행
-          console.log(ws.current.readyState);
-          ws.current.send(temp);
-        };
-      } else {
-        ws.current.send(temp);
-      }
-    } else {
+    if (message === "") {
       alert("메세지를 입력하세요.");
       document.getElementById("message").focus();
       return;
+    } else {
+      const data = JSON.stringify({
+        roomId: roomId,
+        type: "user",
+        name,
+        uuid, // 사용자 로그인시 uuid 고정 음 세션 아이디로 할까..?
+        message,
+        date: new Date().toLocaleString(),
+      });
+
+      ws.current.send(data);
+
+      setMessage("");
     }
-    setMessage("");
   });
+
+  const onText = (e) => {
+    setMessage(e.target.value);
+  };
+
+  const onOpen = () => {
+    const data = JSON.stringify({
+      roomId: roomId,
+      type: "system",
+      name: "system",
+      message: name + "님이 입장하셨습니다",
+    });
+    ws.current.send(data);
+  };
+
+  const onClose = () => {
+    const data = JSON.stringify({
+      roomId: roomId,
+      type: "system",
+      name: "system",
+      message: name + "님이 퇴장하셨습니다",
+    });
+    ws.current.send(data);
+  };
+
+  const onMessage = (message) => {
+    const dataSet = JSON.parse(message.data);
+    setSocketData(dataSet);
+  };
 
   const space = () => {
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -116,14 +126,23 @@ const Chat = ({ roomId }) => {
 
   return (
     <>
-      <input
-        disabled={chkLog}
-        placeholder="이름을 입력하세요."
-        type="text"
-        id="name"
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-      />
+      <div className="input-name">
+        <input
+          className="input-text"
+          disabled={chkLog}
+          placeholder="이름을 입력하세요."
+          type="text"
+          id="name"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          onKeyDown={(ev) => {
+            if (ev.keyCode === 13) {
+              sendName();
+            }
+          }}
+        />
+        <input type="button" value="확인" onClick={sendName} />
+      </div>
       <div className="talk room" ref={scrollRef}>
         {msgBox}
       </div>
