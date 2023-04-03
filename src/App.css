@@ -215,6 +215,10 @@ a {
   text-align: end;
 }
 
+.user .date {
+  text-align: end;
+}
+
 .container .input {
   width: auto;
   padding: 10px;
