@@ -1,30 +1,22 @@
 import React, { useRef, useState, useEffect } from "react";
 import * as StompJs from "@stomp/stompjs";
 import * as SockJS from "sockjs-client";
+import Loader from "./Loader";
 
 const Chat = ({ roomId }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [check, setCheck] = useState(false);
+  const [socket, setSocket] = useState(false);
   const [name, setName] = useState();
   const [uuid, setUuid] = useState(localStorage.getItem("uuid"));
   const scrollRef = useRef();
   const client = useRef({});
 
-  const msgBox = messages.map((v, i) => (
-    <div
-      key={i}
-      className={
-        v.uuid === uuid ? "user" : v.type === "system" ? "system" : "partner"
-      }
-    >
-      {v.type === "user" ? <div className="info">{v.name}</div> : null}
-      <div className="text">{v.message}</div>
-      {v.type === "system" ? null : <div className="date">{v.date}</div>}
-    </div>
-  ));
-
   useEffect(() => {
+    // if (localStorage.getItem("token")) {
+    //   setUuid(localStorage.getItem("token"));
+    // } else
     if (uuid === null) {
       localStorage.setItem("uuid", uuidv4());
       setUuid(localStorage.getItem("uuid"));
@@ -51,6 +43,7 @@ const Chat = ({ roomId }) => {
         console.log(str);
       },
       onConnect: () => {
+        setSocket(true);
         client.current.subscribe(`/sub/chat/room/${roomId}`, ({ body }) => {
           console.log(body);
           setMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
@@ -100,7 +93,7 @@ const Chat = ({ roomId }) => {
           roomId: roomId,
           type: "user",
           name,
-          uuid: uuid, // 사용자 로그인시 uuid 고정 음 이메일로 할까..?
+          uuid: uuid, // 사용자 로그인시 uuid 고정 음 이메일 암호화 해야하나...
           message,
           date: new Date().toLocaleString(),
         }),
@@ -111,7 +104,6 @@ const Chat = ({ roomId }) => {
   };
 
   const space = () => {
-    console.log(scrollRef.current.scrollHeight + "px");
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   };
 
@@ -126,29 +118,48 @@ const Chat = ({ roomId }) => {
 
   return !check ? (
     <div className="input-modal">
-      <div className="input-name-container">
-        <div className="title">이름!</div>
-        <div className="input-name">
-          <input
-            type="text"
-            id="message"
-            className="input-text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onKeyDown={(ev) => {
-              if (ev.keyCode === 13) {
-                onOpen();
-              }
-            }}
-          ></input>
-          <input type="button" value="확인" onClick={onOpen} />
+      {!socket ? (
+        <Loader />
+      ) : (
+        <div className="input-name-container">
+          <div className="title">이름!</div>
+          <div className="input-name">
+            <input
+              type="text"
+              id="message"
+              className="input-text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={(ev) => {
+                if (ev.keyCode === 13) {
+                  onOpen();
+                }
+              }}
+            ></input>
+            <input type="button" value="확인" onClick={onOpen} />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   ) : (
     <>
       <div className="talk room" ref={scrollRef}>
-        {msgBox}
+        {messages.map((v, i) => (
+          <div
+            key={i}
+            className={
+              v.uuid === uuid
+                ? "user"
+                : v.type === "system"
+                ? "system"
+                : "partner"
+            }
+          >
+            {v.type === "user" ? <div className="info">{v.name}</div> : null}
+            <div className="text">{v.message}</div>
+            {v.type === "system" ? null : <div className="date">{v.date}</div>}
+          </div>
+        ))}
       </div>
       <div className="input">
         <input
