@@ -7,7 +7,7 @@ const Chat = ({ roomId }) => {
   const [messages, setMessages] = useState([]);
   const [check, setCheck] = useState(false);
   const [name, setName] = useState();
-  const uuid = localStorage.getItem("uuid");
+  const [uuid, setUuid] = useState(localStorage.getItem("uuid"));
   const scrollRef = useRef();
   const client = useRef({});
 
@@ -25,16 +25,22 @@ const Chat = ({ roomId }) => {
   ));
 
   useEffect(() => {
+    if (uuid === null) {
+      localStorage.setItem("uuid", uuidv4());
+      setUuid(localStorage.getItem("uuid"));
+    }
     connect();
 
     return () => disconnect();
   }, []);
 
   useEffect(() => {
-    try {
-      space();
-    } catch (e) {
-      console.log(e);
+    if (check) {
+      try {
+        space();
+      } catch (e) {
+        console.log(e);
+      }
     }
   }, [messages]);
 
@@ -94,7 +100,7 @@ const Chat = ({ roomId }) => {
           roomId: roomId,
           type: "user",
           name,
-          uuid, // 사용자 로그인시 uuid 고정 음 이메일로 할까..?
+          uuid: uuid, // 사용자 로그인시 uuid 고정 음 이메일로 할까..?
           message,
           date: new Date().toLocaleString(),
         }),
@@ -108,6 +114,15 @@ const Chat = ({ roomId }) => {
     console.log(scrollRef.current.scrollHeight + "px");
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   };
+
+  function uuidv4() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+      (
+        c ^
+        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+      ).toString(16)
+    );
+  }
 
   return !check ? (
     <div className="input-modal">
