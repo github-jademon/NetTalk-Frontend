@@ -17,8 +17,11 @@ const SignIn = () => {
 
     alert(res.data.responseMessage);
     console.log(res);
-    if (res.data.data.token.accessToken) {
-      localStorage.setItem("token", res.data.data.token.accessToken);
+    const accessToken = res.data.result.token.accessToken;
+    if (accessToken) {
+      localStorage.setItem("token", accessToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      window.location.href = "/";
     }
   };
 
