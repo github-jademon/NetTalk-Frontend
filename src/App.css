@@ -93,17 +93,22 @@ input[type="button"] {
   border: none;
 }
 
+.room .title {
+  font-size: 30px;
+  margin: 10px 0;
+}
+
 .rooms {
   display: flex;
   flex-direction: row;
   padding: 5px;
   border: none;
   border-bottom: 1px #9ca3af solid;
+  color: #9ca3af;
 }
 
 .rooms div {
   padding: 10px;
-  color: #9ca3af;
 }
 
 .rooms .number {
@@ -127,17 +132,17 @@ input[type="button"] {
   text-align: center;
 }
 
-a {
-  text-decoration: none;
-}
-
 .rooms:hover {
   display: flex;
   flex-direction: row;
   padding: 5px;
   border: none;
-  border-bottom: 1px #9ca3af solid;
-  background-color: blue;
+  color: blue;
+  border-bottom: 1px blue solid;
+}
+
+a {
+  text-decoration: none;
 }
 
 .loader-container {
@@ -240,11 +245,6 @@ a {
   width: 80px;
 }
 
-.room .title {
-  font-size: 30px;
-  margin: 10px 0;
-}
-
 .system {
   width: auto;
   padding: 10px 0;
@@ -274,7 +274,7 @@ a {
 }
 
 .auth-container #form {
-  padding: 30px 20px;
+  padding: 30px 40px;
   border: #ddd 1px solid;
 }
 
@@ -338,4 +338,8 @@ a {
 
 .input-name input[type="button"] {
   width: 50px;
+}
+
+.logout {
+  cursor: pointer;
 }
