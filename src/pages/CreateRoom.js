@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
 import { setInterceptor } from "assets/setInterceptor";
 
 const CreateRoom = () => {
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
-  const [maxCount, setMaxCount] = useState("");
+  const [username, setUsername] = useState("");
   const submit = async () => {
     const token = localStorage.getItem("token");
     setInterceptor(token);
     const body = {
-      title: title,
-      comment: comment,
-      maxCount: maxCount,
+      room: {
+        title: title,
+        comment: comment,
+      },
+      username: username,
     };
     console.log(body);
     const res = await axios
@@ -21,6 +22,7 @@ const CreateRoom = () => {
       .catch((error) => console.log(error));
 
     console.log(res);
+    window.location = "/";
   };
 
   return (
@@ -47,12 +49,12 @@ const CreateRoom = () => {
             />
           </div>
           <div>
-            <label name="maxCount">최대참가인원</label>
+            <label name="username">닉네임</label>
             <input
-              type="number"
-              id="maxCount"
-              value={maxCount}
-              onChange={(e) => setMaxCount(e.target.value)}
+              type="username"
+              id="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <input type="button" value="생성하기" onClick={() => submit()} />

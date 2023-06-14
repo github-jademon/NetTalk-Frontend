@@ -89,9 +89,9 @@ const SignUp = () => {
         <li>
           <NavLink to="/signin">이미 회원이신가요? 로그인</NavLink>
         </li>
-        <li>
+        {/* <li>
           <NavLink to="/password">비밀번호를 잊으셨나요? 비밀번호변경</NavLink>
-        </li>
+        </li> */}
       </div>
     </div>
   );

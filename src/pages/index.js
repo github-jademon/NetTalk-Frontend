@@ -5,5 +5,4 @@ export { default as NotFound } from "./NotFound";
 export { default as SignIn } from "./SignIn";
 export { default as SignUp } from "./SignUp";
 export { default as Loader } from "./Loader";
-export { default as Socket } from "./Socket";
 export { default as Mypage } from "./Mypage";

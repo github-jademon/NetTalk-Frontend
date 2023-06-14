@@ -19,6 +19,7 @@ body {
   width: 100%;
   height: calc(100vh - 71px);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   z-index: 0;
 }
@@ -26,12 +27,42 @@ body {
 .header {
   width: 100%;
   height: 70px;
-  position: sticky;
-  top: 0;
   border: none;
   border-bottom: #ddd 1px solid;
+  position: sticky;
+  top: 0;
   background-color: #fff;
   z-index: 1;
+}
+
+.header div {
+  margin: auto;
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header .logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px;
+}
+
+.header .logo img {
+  /* width: 48px; */
+  height: 36px;
+}
+
+.header .logo .logo-text1 {
+  color: #28c7f7;
+}
+
+.header .logo .logo-text2 {
+  color: #fdbf00;
 }
 
 .header ul {
@@ -39,7 +70,7 @@ body {
   height: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 }
 
@@ -51,11 +82,30 @@ li {
   list-style: none;
 }
 
-.main > .container {
-  width: 80%;
+.main-container {
+  height: 100%;
+}
+
+.main .main-container .container {
+  height: calc(100% - 500px);
+}
+
+.main .container {
+  width: 100%;
+  max-width: 800px;
   height: 100%;
   display: flex;
   flex-direction: column;
+  margin: auto;
+}
+
+.advertisement {
+  width: 100%;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 label {
@@ -91,6 +141,19 @@ input[type="button"] {
   display: flex;
   flex-direction: row;
   border: none;
+}
+
+.room .room-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.room .room-header input {
+  width: 100px;
+  height: 35px;
+  border-radius: 5px;
 }
 
 .room .title {
@@ -178,17 +241,12 @@ a {
 .talk {
   display: flex;
   flex-direction: column;
-  /* overflow-x: scrool; */
   overflow: auto;
 }
 
 .partner {
   width: auto;
   padding: 10px;
-}
-
-.partner .info {
-  width: 100px;
 }
 
 .partner .text {
@@ -206,7 +264,6 @@ a {
 }
 
 .user .info {
-  width: 100px;
   margin-left: auto;
   text-align: end;
 }

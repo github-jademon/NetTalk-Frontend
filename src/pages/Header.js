@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const Header = () => {
   const activeStyle = {
-    color: "blue",
+    color: "#28C7F7",
     fontSize: "1rem",
   };
 
@@ -19,68 +19,73 @@ const Header = () => {
     window.location.reload();
   };
 
-  return token ? (
+  return (
     <div className="header">
-      <ul>
-        <li>
+      <div>
+        <span>
           <NavLink
             to="/"
+            className="logo"
             style={({ isActive }) => (isActive ? activeStyle : defaultStyle)}
           >
-            홈
+            <img src={`${process.env.PUBLIC_URL}/nettalk.png`} alt="nettalk" />
+            <span className="logo-text1">Net</span>
+            <span className="logo-text2">Talk</span>
           </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/mypage"
-            style={({ isActive }) => (isActive ? activeStyle : defaultStyle)}
-          >
-            마이페이지
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/createRoom"
-            style={({ isActive }) => (isActive ? activeStyle : defaultStyle)}
-          >
-            채팅방생성
-          </NavLink>
-        </li>
-        <li>
-          <div className="logout" onClick={() => logout()}>
-            로그아웃
-          </div>
-        </li>
-      </ul>
-    </div>
-  ) : (
-    <div className="header">
-      <ul>
-        <li>
-          <NavLink
-            to="/"
-            style={({ isActive }) => (isActive ? activeStyle : defaultStyle)}
-          >
-            홈
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/signin"
-            style={({ isActive }) => (isActive ? activeStyle : defaultStyle)}
-          >
-            로그인
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/signup"
-            style={({ isActive }) => (isActive ? activeStyle : defaultStyle)}
-          >
-            회원가입
-          </NavLink>
-        </li>
-      </ul>
+        </span>
+        {token ? (
+          <ul>
+            <li>
+              <NavLink
+                to="/createRoom"
+                style={({ isActive }) =>
+                  isActive ? activeStyle : defaultStyle
+                }
+              >
+                채팅방생성
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/mypage"
+                style={({ isActive }) =>
+                  isActive ? activeStyle : defaultStyle
+                }
+              >
+                마이페이지
+              </NavLink>
+            </li>
+            <li>
+              <div className="logout" onClick={() => logout()}>
+                로그아웃
+              </div>
+            </li>
+          </ul>
+        ) : (
+          <ul>
+            <li>
+              <NavLink
+                to="/signin"
+                style={({ isActive }) =>
+                  isActive ? activeStyle : defaultStyle
+                }
+              >
+                로그인
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/signup"
+                style={({ isActive }) =>
+                  isActive ? activeStyle : defaultStyle
+                }
+              >
+                회원가입
+              </NavLink>
+            </li>
+          </ul>
+        )}
+      </div>
     </div>
   );
 };

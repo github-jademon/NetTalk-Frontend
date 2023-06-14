@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Loader } from "pages";
+import RoomList from "../assets/RoomList";
 
 const Main = (props) => {
   const [data, setData] = useState();
@@ -18,18 +18,18 @@ const Main = (props) => {
   };
 
   return data ? (
-    <div className="container">
-      <h3 className="title">채팅방 목록</h3>
-      {data.map((v, i) => (
-        <Link to={"/room/" + v.id} key={i} className="rooms">
-          <div className="number">{i + 1}</div>
-          <div className="title">{v.title}</div>
-          <div className="comment">{v.comment}</div>
-          <div className="count">
-            {v.userCount} / {v.maxCount}
-          </div>
-        </Link>
-      ))}
+    <div className="main-container">
+      <img
+        src={`${process.env.PUBLIC_URL}/hi.png`}
+        alt=""
+        className="advertisement"
+      />
+      <div className="container">
+        <h3 className="title">채팅방 목록</h3>
+        {data.map((v, i) => (
+          <RoomList key={i} room={v} i={i} />
+        ))}
+      </div>
     </div>
   ) : (
     <Loader />

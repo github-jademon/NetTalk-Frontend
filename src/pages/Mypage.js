@@ -28,9 +28,6 @@ const Mypage = (props) => {
           <div className="number">{i + 1}</div>
           <div className="title">{v.title}</div>
           <div className="comment">{v.comment}</div>
-          <div className="count">
-            {v.userCount} / {v.maxCount}
-          </div>
         </Link>
       ))}
     </div>

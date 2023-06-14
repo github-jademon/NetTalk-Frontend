@@ -18,6 +18,8 @@ const Room = () => {
   const [chatMessages, setChatMessages] = useState();
   const [check, setCheck] = useState(false);
   const [socket, setSocket] = useState(false);
+  const [owner, setOwner] = useState(false);
+  const [changeName, setChangeName] = useState(false);
   const [uuid, setUuid] = useState();
 
   useEffect(() => {
@@ -38,7 +40,7 @@ const Room = () => {
         console.log(e);
       }
     }
-  }, [messages]);
+  }, [messages, check]);
 
   useEffect(() => {
     if (!chatMessages) return;
@@ -132,6 +134,7 @@ const Room = () => {
     setChatMessages(response.data.messages);
 
     if (response.data.user) {
+      setOwner(response.data.user.owner === "true" ? true : false);
       setUuid(response.data.user.email);
       setName(response.data.user.name);
     }
@@ -140,6 +143,47 @@ const Room = () => {
       localStorage.setItem("uuid", uuidv4());
       setUuid(localStorage.getItem("uuid"));
     }
+  };
+
+  const onChangeName = async () => {
+    const body = {
+      email: uuid,
+      name: name,
+    };
+
+    axios
+      .post(`/api/rooms/${roomId}/name`, body)
+      .catch((err) => console.log(err));
+
+    setChangeName(false);
+  };
+
+  const onDelete = async () => {
+    if (
+      !window.confirm("정말 " + (owner ? "삭제하" : "나가") + "시겠습니까?")
+    ) {
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    setInterceptor(token);
+
+    client.current.publish({
+      destination: "/pub/chat/exit",
+      body: JSON.stringify({
+        roomId: roomId,
+        type: "system",
+        username: name,
+      }),
+    });
+
+    const response = await axios
+      .delete(`/api/rooms/${roomId}`)
+      .catch((err) => console.log(err));
+
+    console.log("!!!!!!!!!!!!!!!!!!!!!", response.data);
+    window.location = "/";
   };
 
   const onOpen = async () => {
@@ -152,18 +196,11 @@ const Room = () => {
       body: JSON.stringify({
         roomId: roomId,
         type: "system",
-        name: name,
+        username: name,
       }),
     });
 
-    const body = {
-      email: uuid,
-      name: name,
-    };
-
-    axios
-      .post(`/api/rooms/${roomId}/name`, body)
-      .catch((err) => console.log(err));
+    onChangeName();
 
     setCheck(true);
   };
@@ -183,8 +220,22 @@ const Room = () => {
 
   return data ? (
     <div className="container room">
-      <div className="title">
-        {data.id}. {data.title}
+      <div className="room-header">
+        <div className="title">
+          {roomId}. {data.title}
+        </div>
+        <div>
+          <input
+            type="button"
+            value="이름 변경"
+            onClick={() => setChangeName(true)}
+          />
+          <input
+            type="button"
+            value={owner === true ? "삭제" : "나가기"}
+            onClick={onDelete}
+          />
+        </div>
       </div>
       <div>{data.comment}</div>
       <hr />
@@ -215,47 +266,77 @@ const Room = () => {
         </div>
       ) : (
         <>
-          <div className="talk room" ref={scrollRef}>
-            {messages ? (
-              <>
-                {messages.map((v, i) => (
-                  <div
-                    key={i}
-                    className={
-                      v.uuid === uuid
-                        ? "user"
-                        : v.type === "system"
-                        ? "system"
-                        : "partner"
+          {changeName ? (
+            <div className="input-modal">
+              <div className="input-name-container">
+                <div className="title">이름!</div>
+                <div className="input-name">
+                  <input
+                    type="text"
+                    id="message"
+                    className="input-text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    onKeyDown={(ev) => {
+                      if (ev.keyCode === 13) {
+                        onChangeName();
+                      }
+                    }}
+                  />
+                  <input type="button" value="확인" onClick={onChangeName} />
+                  <input
+                    type="button"
+                    value="취소"
+                    onClick={() => setChangeName(false)}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="talk room" ref={scrollRef}>
+                {messages ? (
+                  <>
+                    {messages.map((v, i) => (
+                      <div
+                        key={i}
+                        className={
+                          v.uuid === uuid
+                            ? "user"
+                            : v.type === "system"
+                            ? "system"
+                            : "partner"
+                        }
+                      >
+                        {v.type === "user" ? (
+                          <div className="info">{v.username}</div>
+                        ) : null}
+                        <div className="text">{v.message}</div>
+                        {v.type === "system" ? null : (
+                          <div className="date">{v.date}</div>
+                        )}
+                      </div>
+                    ))}
+                  </>
+                ) : null}
+              </div>
+              <div className="input">
+                <input
+                  type="text"
+                  id="message"
+                  className="input-text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={(ev) => {
+                    if (ev.keyCode === 13) {
+                      send();
                     }
-                  >
-                    {v.type === "user" ? (
-                      <div className="info">{v.username}</div>
-                    ) : null}
-                    <div className="text">{v.message}</div>
-                    {v.type === "system" ? null : (
-                      <div className="date">{v.date}</div>
-                    )}
-                  </div>
-                ))}
-              </>
-            ) : null}
-          </div>
-          <div className="input">
-            <input
-              type="text"
-              id="message"
-              className="input-text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={(ev) => {
-                if (ev.keyCode === 13) {
-                  send();
-                }
-              }}
-            ></input>
-            <input type="button" value="보내기" onClick={send} />
-          </div>
+                  }}
+                ></input>
+                <input type="button" value="보내기" onClick={send} />
+              </div>
+            </>
+          )}
         </>
       )}
     </div>
