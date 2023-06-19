@@ -10,6 +10,7 @@ const SignUp = () => {
   const [valid_email, setValidEmail] = useState("");
   const [valid_userid, setValidUserid] = useState("");
   const [valid_password, setValidPassword] = useState("");
+  const [valid_password2, setValidPassword2] = useState("");
 
   const submit = async () => {
     const body = {
@@ -23,8 +24,11 @@ const SignUp = () => {
       .post(`/auth/signup`, body)
       .catch((error) => console.log(error));
 
-    if (res.data.responseMessage) {
+    if (res.data.responseMessage === "비밀번호가 다릅니다") {
+      setValidPassword2(res.data.responseMessage);
+    } else if (res.data.responseMessage) {
       alert(res.data.responseMessage);
+      window.location.href = "/signin";
     } else {
       setValidEmail(res.data.valid_email);
       setValidPassword(res.data.valid_password);
@@ -83,6 +87,9 @@ const SignUp = () => {
               value={passwordck}
               onChange={(e) => setPasswordck(e.target.value)}
             />
+            {valid_password2 ? (
+              <span className="valid-ck">{valid_password2}</span>
+            ) : null}
           </div>
           <input type="button" value="회원가입" onClick={() => submit()} />
         </form>
