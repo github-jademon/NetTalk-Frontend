@@ -37,7 +37,7 @@ body {
 
 .header div {
   margin: auto;
-  max-width: 1200px;
+  max-width: 1300px;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -57,11 +57,11 @@ body {
   height: 36px;
 }
 
-.header .logo .logo-text1 {
+.logo-text1 {
   color: #28c7f7;
 }
 
-.header .logo .logo-text2 {
+.logo-text2 {
   color: #fdbf00;
 }
 
@@ -87,7 +87,7 @@ li {
 }
 
 .main .main-container .container {
-  height: calc(100% - 500px);
+  height: calc(100% - 450px);
 }
 
 .main .container {
@@ -101,11 +101,51 @@ li {
 
 .advertisement {
   width: 100%;
-  height: 500px;
+  height: 100%;
+  max-height: 450px;
+  position: relative;
+}
+
+.advertisement span {
+  width: 100%;
+  height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  top: 0;
+  background-color: rgb(233, 223, 209, 0.5);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.advertisement div {
+  font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  color: #f1ebe5;
+  text-transform: uppercase;
+  text-shadow: 0 8px 9px #c4b59d, 0px -2px 1px #fff;
+  letter-spacing: -1px;
+}
+
+.advertisement span .text {
+  padding: 10px 0 0 0;
+  text-transform: lowercase;
+  font-size: 24px;
+  letter-spacing: 0px;
+  text-shadow: 0 4px 4px #c4b59d, 0px -2px 1px #fff;
+  font-weight: 500;
+}
+
+.advertisement video {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
+  object-fit: cover;
 }
 
 label {
@@ -168,6 +208,7 @@ input[type="button"] {
   border: none;
   border-bottom: 1px #9ca3af solid;
   color: #9ca3af;
+  cursor: pointer;
 }
 
 .rooms div {
@@ -347,7 +388,7 @@ a {
   margin: 20px 5px;
 }
 
-.input-modal {
+.modal {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -357,11 +398,10 @@ a {
   top: 0;
   left: 0;
   z-index: 10;
-  background-color: #707070;
-  opacity: 0.8;
+  background-color: rgb(112, 112, 112, 0.8);
 }
 
-.input-name-container {
+.modal-container {
   display: flex;
   align-self: center;
   justify-content: center;
@@ -376,16 +416,23 @@ a {
   border-radius: 10px;
 }
 
-.input-name-container .title {
+.modal-container .title {
   margin: 0px;
   font-size: 1.2rem;
   text-align: center;
 }
 
-.input-name-container .input-name {
+.modal-container .input-name {
   display: flex;
   flex-direction: row;
   margin: 30px 0 0 0;
+  padding: 10px;
+}
+
+.modal-container .comment {
+  display: flex;
+  flex-direction: row;
+  height: 50px;
   padding: 10px;
 }
 

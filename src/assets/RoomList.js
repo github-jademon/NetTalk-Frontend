@@ -11,10 +11,13 @@ const Main = ({ room, i }) => {
         <div className="comment">{room.comment}</div>
       </div>
       {openRoom ? (
-        <div className="input-modal" onClick={() => setOpenRoom(false)}>
-          <div className="input-name-container">
+        <div className="modal" onClick={() => setOpenRoom(false)}>
+          <div
+            className="modal-container"
+            style={{ justifyContent: "space-between" }}
+          >
             <div className="title">{room.title}</div>
-            <div>{room.comment}</div>
+            <div className="comment">{room.comment}</div>
             <input
               type="button"
               value="참가하기"

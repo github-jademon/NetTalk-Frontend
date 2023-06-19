@@ -240,11 +240,11 @@ const Room = () => {
       <div>{data.comment}</div>
       <hr />
       {!check ? (
-        <div className="input-modal">
+        <div className="modal">
           {!socket || chatMessages ? (
             <Loader />
           ) : (
-            <div className="input-name-container">
+            <div className="modal-container">
               <div className="title">이름!</div>
               <div className="input-name">
                 <input
@@ -267,8 +267,8 @@ const Room = () => {
       ) : (
         <>
           {changeName ? (
-            <div className="input-modal">
-              <div className="input-name-container">
+            <div className="modal">
+              <div className="modal-container">
                 <div className="title">이름!</div>
                 <div className="input-name">
                   <input

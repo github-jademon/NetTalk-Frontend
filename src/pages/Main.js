@@ -19,11 +19,22 @@ const Main = (props) => {
 
   return data ? (
     <div className="main-container">
-      <img
-        src={`${process.env.PUBLIC_URL}/hi.png`}
+      {/* <img
+        src={`${process.env.PUBLIC_URL}/hi1.png`}
         alt=""
         className="advertisement"
-      />
+      /> */}
+      <div className="advertisement">
+        <video autoPlay loop muted playsInline>
+          <source src={`${process.env.PUBLIC_URL}/hi.mp4`} type="video/mp4" />
+        </video>
+        <span>
+          <div>Welcome to NetTalk</div>
+          <div className="text">
+            where people and the world come to get connected
+          </div>
+        </span>
+      </div>
       <div className="container">
         <h3 className="title">채팅방 목록</h3>
         {data.map((v, i) => (
